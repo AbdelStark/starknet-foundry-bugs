@@ -11,7 +11,8 @@ use bugs::bug001::market_factory::{IMarketFactorySafeDispatcher, IMarketFactoryS
 
 #[test]
 fn bug001_test() {
-    let market_factory_address = deploy_market_factory();
+    let data_store_address = deploy_data_store();
+    let market_factory_address = deploy_market_factory(data_store_address);
     let market_factory = IMarketFactorySafeDispatcher { contract_address: market_factory_address };
     let result = market_factory
         .create_market(
@@ -31,9 +32,21 @@ fn bug001_test() {
     }
 }
 
-fn deploy_market_factory() -> ContractAddress {
+
+fn deploy_data_store() -> ContractAddress {
+    let class_hash = declare('DataStore');
+    let mut constructor_calldata = ArrayTrait::new();
+    let prepared = PreparedContract {
+        class_hash: class_hash, constructor_calldata: @constructor_calldata
+    };
+    deploy(prepared).unwrap()
+}
+
+
+fn deploy_market_factory(data_store_address: ContractAddress) -> ContractAddress {
     let class_hash = declare('MarketFactory');
     let mut constructor_calldata = ArrayTrait::new();
+    constructor_calldata.append(data_store_address.into());
     let prepared = PreparedContract {
         class_hash: class_hash, constructor_calldata: @constructor_calldata
     };
