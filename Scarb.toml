@@ -1,0 +1,13 @@
+[package]
+name = "bugs"
+version = "0.1.0"
+
+[[target.starknet-contract]]
+sierra = true
+casm = true
+
+[dependencies]
+starknet = "2.1.0-rc0"
+
+[tool.snforge]
+exit_first = false
