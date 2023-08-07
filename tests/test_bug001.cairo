@@ -25,7 +25,9 @@ fn bug001_test() {
         // If the result is ok, then the test failed.
         Result::Ok(_) => assert(false, 'bad_result'),
         // If the result is err, then the test passed.
-        Result::Err(_) => {}
+        Result::Err(panic_data) => {
+            assert(*panic_data.at(0) == 'invalid_market_params', *panic_data.at(0))
+        }
     }
 }
 
